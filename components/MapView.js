@@ -1,9 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+
 
 // naprawa domyślnych ikon Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -12,6 +13,15 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon-2x.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png'
 });
+
+function getDaysUntil(dateStr) {
+  const today = new Date();
+  const target = new Date(dateStr);
+  const diffTime = target - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return isNaN(diffDays) ? null : diffDays;
+}
+
 
 export default function MapView({ results, userLocation }) {
   // obliczamy center i zoom w zależności od dostępności lokalizacji
@@ -53,16 +63,26 @@ export default function MapView({ results, userLocation }) {
         .filter(item => item.latitude && item.longitude)
         .map((item, idx) => (
           <Marker key={idx} position={[item.latitude, item.longitude]}>
+            <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent>
+              {
+                getDaysUntil(item.date) !== null
+                  ? `Za ${getDaysUntil(item.date)} dni`
+                  : 'Brak daty'
+              }
+            </Tooltip>
             <Popup>
-              <strong>{item.provider}</strong>
-              <br />
-              {item.place}
-              <br />
-              {item.address}, {item.locality}
-              <br />
-              Termin: {item.date}
+              <strong>{item.provider}</strong><br />
+              {item.place}<br />
+              {item.address}, {item.locality}<br />
+              Termin: {item.date}<br />
+              {
+                getDaysUntil(item.date) !== null
+                  ? `W realizacji za ${getDaysUntil(item.date)} dni`
+                  : 'Brak informacji o terminie'
+              }
             </Popup>
           </Marker>
+
         ))}
     </MapContainer>
   );
