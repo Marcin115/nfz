@@ -85,11 +85,10 @@ export default function Home() {
                 <button
                   key={state.id}
                   onClick={() => handleSelect(state)}
-                  className={`p-4 rounded-xl border-2 text-center font-medium shadow-sm transition duration-150 text-sm ${
-                    selectedId === state.id
-                      ? 'border-blue-500 bg-blue-100 text-blue-800'
-                      : 'border-gray-300 hover:bg-gray-100'
-                  }`}
+                  className={`p-4 rounded-xl border-2 text-center font-medium shadow-sm transition duration-150 text-sm ${selectedId === state.id
+                    ? 'border-blue-500 bg-blue-100 text-blue-800'
+                    : 'border-gray-300 hover:bg-gray-100'
+                    }`}
                 >
                   {state.name}
                 </button>
@@ -125,11 +124,10 @@ export default function Home() {
           <button
             onClick={handleContinue}
             disabled={!selectedId || !locationSaved}
-            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${
-              selectedId && locationSaved
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
+            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${selectedId && locationSaved
+              ? 'bg-blue-600 hover:bg-blue-700'
+              : 'bg-gray-400 cursor-not-allowed'
+              }`}
           >
             Kontynuuj
           </button>

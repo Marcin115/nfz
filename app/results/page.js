@@ -10,9 +10,22 @@ export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  //lokalizacja uzytkownika
+  const [userLat, setUserLat] = useState(null);
+  const [userLng, setUserLng] = useState(null);
+
   useEffect(() => {
     const stateId = localStorage.getItem('selectedStateId');
     const specialityKey = localStorage.getItem('selectedSpecialityKey');
+
+    //lokalizacja uzytkownika
+    const lat = parseFloat(localStorage.getItem('userLatitude'));
+    const lng = parseFloat(localStorage.getItem('userLongitude'));
+
+    if (lat && lng) {
+      setUserLat(lat);
+      setUserLng(lng);
+    }
 
     if (!stateId || !specialityKey) {
       setError('Brakuje danych. Wróć do początku.');
@@ -56,8 +69,13 @@ export default function ResultsPage() {
   return (
     <div className="fixed inset-0 z-0">
       {/* Map fills screen */}
-      <MapView results={results} />
-
+      <MapView
+        results={results}
+        userLocation={(userLat != null && userLng != null)
+          ? { lat: userLat, lng: userLng }
+          : null
+        }
+      />
       {/* Floating list panel */}
       <aside className="absolute top-4 left-4 bottom-4 w-[350px] bg-white shadow-lg rounded-xl p-4 overflow-y-auto z-[999]">
         <h1 className="text-xl font-bold mb-4">Wyniki wyszukiwania</h1>

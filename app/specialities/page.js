@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 const SPECIALITIES = [
   { key: 'ODDZIAŁ KARDIOLOGICZNY', name: 'Kardiolog' },
-  { key: 'ODDZIAŁ OTORYNOLARYNGOLOGICZNY', name: 'Laryngolog'},
+  { key: 'ODDZIAŁ OTORYNOLARYNGOLOGICZNY', name: 'Laryngolog' },
   { key: 'PORADNIA DERMATOLOGICZNA', name: 'Dermatolog' },
   { key: 'ODDZIAŁ NEUROLOGICZNY', name: 'Neurolog' },
   { key: 'ODDZIAŁ PEDIATRYCZNY', name: 'Pediatra' },
@@ -63,11 +63,10 @@ export default function SpecialitiesPage() {
               <button
                 key={speciality.key}
                 onClick={() => handleSelect(speciality)}
-                className={`p-4 rounded-xl border-2 text-center font-medium shadow-sm transition text-sm ${
-                  selectedKey === speciality.key
+                className={`p-4 rounded-xl border-2 text-center font-medium shadow-sm transition text-sm ${selectedKey === speciality.key
                     ? 'border-blue-500 bg-blue-100 text-blue-800'
                     : 'border-gray-300 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 {speciality.name}
               </button>
@@ -80,11 +79,10 @@ export default function SpecialitiesPage() {
           <button
             onClick={handleContinue}
             disabled={!selectedKey}
-            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${
-              selectedKey
+            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${selectedKey
                 ? 'bg-blue-600 hover:bg-blue-700'
                 : 'bg-gray-400 cursor-not-allowed'
-            }`}
+              }`}
           >
             Kontynuuj
           </button>
