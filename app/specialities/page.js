@@ -45,7 +45,7 @@ export default function SpecialitiesPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-[#eaeaea]">
+    <main className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-[#fdf4ef] rounded-xl shadow-lg p-6 w-full max-w-3xl">
         {/* Header */}
         <div className="text-center mb-6">

@@ -81,13 +81,14 @@ export default function MapView({ results, userLocation, onMarkerClick, selected
             eventHandlers={{
               click: () => onMarkerClick(item) // notify parent
             }}>
-            <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent>
-              {
-                getDaysUntil(item.date) !== null
-                  ? `Za ${getDaysUntil(item.date)} dni`
-                  : 'Brak daty'
-              }
-            </Tooltip>
+            {typeof window !== 'undefined' && (
+        <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent>
+          {
+            getDaysUntil(item.date) !== null
+              ? `Za ${getDaysUntil(item.date)} dni`
+              : 'Brak daty'
+          }
+        </Tooltip>)}
           </Marker>
 
         ))}

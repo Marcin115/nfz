@@ -9,20 +9,33 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="pl">
       <body className="bg-[var(--background)] text-[var(--foreground)] font-sans">
-        {/* Navbar */}
-        <nav className="w-full bg-white border-b p-4 shadow-sm flex justify-between items-center sticky top-0 z-50">
-          <div className="font-bold text-lg">Termin NFZ</div>
-          <div className="space-x-4">
-            <Link href="/" className="text-blue-600 hover:underline">Lokalizacja</Link>
-            <Link href="/specialities" className="text-blue-600 hover:underline">Wybór świadczenia NFZ</Link>
-            <Link href="/results" className="text-blue-600 hover:underline">Widok mapy</Link>
+        {/* Fixed Top Navbar - no margins */}
+        <nav className="w-full bg-[#fdf4ef] shadow-md rounded-b-xl px-6 py-4 fixed top-0 left-0 z-50">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            {/* Logo / Brand */}
+            <div className="text-2xl font-bold text-[#326a5d] tracking-tight">
+              Termin NFZ
+            </div>
+
+            {/* Navigation Links */}
+            <div className="flex gap-4">
+              <Link href="/" className="text-sm font-medium text-[#326a5d] hover:text-[#27564b] transition">
+                Lokalizacja
+              </Link>
+              <Link href="/specialities" className="text-sm font-medium text-[#326a5d] hover:text-[#27564b] transition">
+                Wybór świadczenia
+              </Link>
+              <Link href="/results" className="text-sm font-medium text-[#326a5d] hover:text-[#27564b] transition">
+                Mapa wyników
+              </Link>
+            </div>
           </div>
         </nav>
 
-        {/* Page content */}
-        <main>{children}</main>
+        {/* Content below navbar */}
+        <main className="pt-[88px]">{children}</main>
       </body>
     </html>
   );

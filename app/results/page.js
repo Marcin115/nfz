@@ -1,15 +1,19 @@
 'use client';
+import { useRef } from 'react';
+
 
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
 
+
 export default function ResultsPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedResult, setSelectedResult] = useState(null);
+  const listRef = useRef(null);
   //lokalizacja uzytkownika
   const [userLat, setUserLat] = useState(null);
   const [userLng, setUserLng] = useState(null);
@@ -72,6 +76,9 @@ export default function ResultsPage() {
     const filtered = prev.filter((r) => r !== item);
     return [item, ...filtered];
   });
+  if (listRef.current) {
+    listRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   };
 
 
@@ -88,29 +95,39 @@ export default function ResultsPage() {
         }
       />
       {/* Floating list panel */}
-      <aside className="absolute top-4 left-4 bottom-4 w-[350px] bg-white shadow-lg rounded-xl p-4 overflow-y-auto z-[999]">
-        <h1 className="text-xl font-bold mb-4">Wyniki wyszukiwania</h1>
+      <aside
+        ref={listRef}
+       className="absolute left-4 top-[88px] bottom-4 w-[360px] bg-transparent shadow-xl rounded-xl p-5 overflow-y-auto z-[999] border border-gray-300">
+  <h1 className="text-xl font-bold text-[#326a5d] mb-5">Wyniki wyszukiwania</h1>
 
-        {loading && <p>Ładowanie danych...</p>}
-        {error && <p className="text-red-600">{error}</p>}
-        {!loading && !error && results.length === 0 && <p>Brak wyników.</p>}
+  {loading && <p className="text-gray-600">Ładowanie danych...</p>}
+  {error && <p className="text-red-600">{error}</p>}
+  {!loading && !error && results.length === 0 && (
+    <p className="text-gray-600">Brak wyników.</p>
+  )}
 
-        <div className="space-y-4">
-          {results.map((item, index) => (
-            <div key={index}
-             onClick={() => handleMarkerClick(item)}
-             className={`p-4 border rounded shadow text-sm cursor-pointer transition ${
-              selectedResult === item ? 'bg-yellow-100 border-yellow-500' : 'bg-gray-50 hover:bg-gray-100'
-            }`}>
-              <p><strong>Placówka:</strong> {item.provider}</p>
-              <p><strong>Oddział:</strong> {item.place}</p>
-              <p><strong>Adres:</strong> {item.address}, {item.locality}</p>
-              <p><strong>Telefon:</strong> {item.phone || 'Brak danych'}</p>
-              <p><strong>Termin:</strong> {item.date}</p>
-            </div>
-          ))}
-        </div>
-      </aside>
+  <div className="space-y-4">
+    {results.map((item, index) => (
+      <div
+        key={index}
+        onClick={() => handleMarkerClick(item)}
+        className={`p-4 rounded-lg border cursor-pointer transition text-sm shadow-sm ${
+          selectedResult === item
+            ? 'bg-blue-50 border-blue-400'
+            : 'bg-white hover:bg-gray-50 border-gray-200'
+        }`}
+      >
+        <p className="text-[#326a5d] font-semibold">{item.provider}</p>
+        <p className="text-gray-700">{item.place}</p>
+        <p className="text-gray-600">{item.address}, {item.locality}</p>
+        <p className="text-gray-600">📞 {item.phone || 'Brak danych'}</p>
+        <p className="text-sm mt-1">
+          <strong>Termin:</strong> {item.date}
+        </p>
+      </div>
+    ))}
+  </div>
+</aside>
     </div>
   );
 }
