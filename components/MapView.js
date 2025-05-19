@@ -1,7 +1,7 @@
 'use client';
-
+import { useEffect } from 'react';
 import { useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -14,6 +14,18 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png'
 });
 
+function MapController({ selectedResult }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (selectedResult?.latitude && selectedResult?.longitude) {
+      map.setView([selectedResult.latitude, selectedResult.longitude], 14, { animate: true });
+    }
+  }, [selectedResult, map]);
+
+  return null;
+}
+
 function getDaysUntil(dateStr) {
   const today = new Date();
   const target = new Date(dateStr);
@@ -23,7 +35,7 @@ function getDaysUntil(dateStr) {
 }
 
 
-export default function MapView({ results, userLocation }) {
+export default function MapView({ results, userLocation, onMarkerClick, selectedResult }) {
   // obliczamy center i zoom w zależności od dostępności lokalizacji
   const { center, zoom } = useMemo(() => {
     if (
@@ -46,6 +58,7 @@ export default function MapView({ results, userLocation }) {
       scrollWheelZoom={true}
       style={{ height: '100%', width: '100%' }}
     >
+      <MapController selectedResult={selectedResult} />
       <TileLayer
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -62,7 +75,12 @@ export default function MapView({ results, userLocation }) {
       {results
         .filter(item => item.latitude && item.longitude)
         .map((item, idx) => (
-          <Marker key={idx} position={[item.latitude, item.longitude]}>
+          <Marker 
+            key={idx} 
+            position={[item.latitude, item.longitude]}
+            eventHandlers={{
+              click: () => onMarkerClick(item) // notify parent
+            }}>
             <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent>
               {
                 getDaysUntil(item.date) !== null
@@ -70,17 +88,6 @@ export default function MapView({ results, userLocation }) {
                   : 'Brak daty'
               }
             </Tooltip>
-            <Popup>
-              <strong>{item.provider}</strong><br />
-              {item.place}<br />
-              {item.address}, {item.locality}<br />
-              Termin: {item.date}<br />
-              {
-                getDaysUntil(item.date) !== null
-                  ? `W realizacji za ${getDaysUntil(item.date)} dni`
-                  : 'Brak informacji o terminie'
-              }
-            </Popup>
           </Marker>
 
         ))}

@@ -9,7 +9,7 @@ export default function ResultsPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
+  const [selectedResult, setSelectedResult] = useState(null);
   //lokalizacja uzytkownika
   const [userLat, setUserLat] = useState(null);
   const [userLng, setUserLng] = useState(null);
@@ -66,11 +66,22 @@ export default function ResultsPage() {
       });
   }, []);
 
+  const handleMarkerClick = (item) => {
+  setSelectedResult(item);
+  setResults((prev) => {
+    const filtered = prev.filter((r) => r !== item);
+    return [item, ...filtered];
+  });
+  };
+
+
   return (
     <div className="fixed inset-0 z-0">
       {/* Map fills screen */}
       <MapView
         results={results}
+        onMarkerClick={handleMarkerClick}
+        selectedResult={selectedResult}
         userLocation={(userLat != null && userLng != null)
           ? { lat: userLat, lng: userLng }
           : null
@@ -86,7 +97,11 @@ export default function ResultsPage() {
 
         <div className="space-y-4">
           {results.map((item, index) => (
-            <div key={index} className="p-4 border rounded shadow text-sm bg-gray-50">
+            <div key={index}
+             onClick={() => handleMarkerClick(item)}
+             className={`p-4 border rounded shadow text-sm cursor-pointer transition ${
+              selectedResult === item ? 'bg-yellow-100 border-yellow-500' : 'bg-gray-50 hover:bg-gray-100'
+            }`}>
               <p><strong>Placówka:</strong> {item.provider}</p>
               <p><strong>Oddział:</strong> {item.place}</p>
               <p><strong>Adres:</strong> {item.address}, {item.locality}</p>
