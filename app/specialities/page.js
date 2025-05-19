@@ -45,28 +45,28 @@ export default function SpecialitiesPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-4xl flex flex-col gap-8">
-        {/* Heading */}
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Wybierz specjalizację</h1>
+    <main className="min-h-screen flex items-center justify-center p-4 bg-[#eaeaea]">
+      <div className="bg-[#fdf4ef] rounded-xl shadow-lg p-6 w-full max-w-3xl">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-[#326a5d] mb-2">Wybierz specjalizację</h1>
           <p className="text-sm text-gray-600">
             Województwo: <strong>{stateName}</strong>
           </p>
         </div>
 
-        {/* Grid */}
-        <div>
-          <h2 className="text-lg font-semibold mb-4 text-center">Dostępne specjalizacje</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        {/* Grid of Specializations */}
+        <div className="border border-gray-300 rounded-md p-4 mb-6">
+          <div className="grid grid-cols-3 gap-4">
             {SPECIALITIES.map((speciality) => (
               <button
                 key={speciality.key}
                 onClick={() => handleSelect(speciality)}
-                className={`p-4 rounded-xl border-2 text-center font-medium shadow-sm transition text-sm ${selectedKey === speciality.key
-                    ? 'border-blue-500 bg-blue-100 text-blue-800'
-                    : 'border-gray-300 hover:bg-gray-100'
-                  }`}
+                className={`w-full text-center px-4 py-2 rounded-full font-medium transition ${
+                  selectedKey === speciality.key
+                    ? 'bg-blue-100 text-blue-800 border border-blue-500'
+                    : 'bg-[#326a5d] text-white hover:bg-[#27564b]'
+                }`}
               >
                 {speciality.name}
               </button>
@@ -74,15 +74,16 @@ export default function SpecialitiesPage() {
           </div>
         </div>
 
-        {/* Continue button */}
-        <div className="flex justify-center mt-4">
+        {/* Continue Button */}
+        <div className="flex justify-center">
           <button
             onClick={handleContinue}
             disabled={!selectedKey}
-            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${selectedKey
+            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${
+              selectedKey
                 ? 'bg-blue-600 hover:bg-blue-700'
                 : 'bg-gray-400 cursor-not-allowed'
-              }`}
+            }`}
           >
             Kontynuuj
           </button>
