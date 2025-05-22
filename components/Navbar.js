@@ -15,7 +15,7 @@ export default function Navbar() {
                     {/* Primary nav links – zamień dotychczasowy <ul> … </ul> na to */}
                     <ul className="hidden md:flex items-center space-x-6 text-[#326a5d] font-medium">
                         {[
-                            { href: '/', label: 'Lokalizacja' },
+                            { href: '/', label: 'Wybór lokalizacji' },
                             { href: '/specialities', label: 'Wybór świadczenia' },
                             { href: '/results', label: 'Mapa wyników' },
                         ].map(({ href, label }) => (

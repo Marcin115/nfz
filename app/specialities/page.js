@@ -45,7 +45,8 @@ export default function SpecialitiesPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4">
+    <main className="h-[calc(100vh-88px)] flex items-center justify-center p-4">
+      {/* tu zmiana zeby nie bylo scrolla */}
       <div className="bg-[#fdf4ef] rounded-xl shadow-lg p-6 w-full max-w-3xl">
         {/* Header */}
         <div className="text-center mb-6">

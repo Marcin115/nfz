@@ -1,8 +1,9 @@
 'use client';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
+import { STATES } from '../constants/states';
 
-const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
+const MapView = dynamic(() => import('../../components/MapView'), { ssr: false });
 
 /* -------------------------------------------------- */
 /* 🛠️  HELPER-y                                       */
@@ -59,8 +60,11 @@ export default function ResultsPage() {
       return;
     }
 
+    const selectedState = STATES.find(s => s.id === stateId);
+    const provinceCode = selectedState?.nfzId || '1';
+
     const url = `https://api.nfz.gov.pl/app-itl-api/queues?` +
-      `page=1&limit=20&format=json&case=1&province=${stateId}` +
+      `page=1&limit=20&format=json&case=1&province=${provinceCode}` +
       `&benefit=${encodeURIComponent(specialityKey)}` +
       `&benefitForChildren=false&api-version=1.3`;
 

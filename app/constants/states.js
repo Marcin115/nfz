@@ -1,0 +1,18 @@
+export const STATES = [
+    { id: '02', name: 'Dolnośląskie', nfzId: '01' },
+    { id: '04', name: 'Kujawsko-Pomorskie', nfzId: '02' },
+    { id: '06', name: 'Lubelskie', nfzId: '03' },
+    { id: '08', name: 'Lubuskie', nfzId: '04' },
+    { id: '10', name: 'Łódzkie', nfzId: '05' },
+    { id: '12', name: 'Małopolskie', nfzId: '06' },
+    { id: '14', name: 'Mazowieckie', nfzId: '07' },
+    { id: '16', name: 'Opolskie', nfzId: '08' },
+    { id: '18', name: 'Podkarpackie', nfzId: '09' },
+    { id: '20', name: 'Podlaskie', nfzId: '10' },
+    { id: '22', name: 'Pomorskie', nfzId: '11' },
+    { id: '24', name: 'Śląskie', nfzId: '12' },
+    { id: '26', name: 'Świętokrzyskie', nfzId: '13' },
+    { id: '28', name: 'Warmińsko-Mazurskie', nfzId: '14' },
+    { id: '30', name: 'Wielkopolskie', nfzId: '15' },
+    { id: '32', name: 'Zachodniopomorskie', nfzId: '16' },
+];

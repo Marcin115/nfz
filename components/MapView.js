@@ -2,6 +2,7 @@
 import { useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 
 /* ----------  DOMYŚLNE IKONY  ---------- */
@@ -77,7 +78,6 @@ function MapController({ selectedResult }) {
 }
 
 /* ----------  LEGENDA  ---------- */
-/* ----------  LEGENDA  ---------- */
 const Legend = () => (
   <div className="absolute top-20 right-2 z-[1000] rounded-lg bg-white/90 shadow p-3 text-xs space-y-2">
     {[
@@ -99,8 +99,26 @@ const Legend = () => (
         <span>{label}</span>
       </div>
     ))}
+
+    {/* Znacznik lokalizacji użytkownika */}
+    <div className="flex items-center gap-2">
+      <svg
+        width="18"
+        height="24"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="#3388ff"
+        stroke="#1d4ed8"
+        strokeWidth="1"
+      >
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Z" />
+        <circle cx="12" cy="9" r="3" fill="white" />
+      </svg>
+      <span>Twoja lokalizacja</span>
+    </div>
   </div>
 );
+
 
 
 /* ----------  GŁÓWNY KOMPONENT  ---------- */
@@ -109,9 +127,9 @@ export default function MapView({ results, userLocation, onMarkerClick, selected
 
   const { center, zoom } = useMemo(() => {
     if (userLocation?.lat && userLocation?.lng) {
-      return { center: [userLocation.lat, userLocation.lng], zoom: 10 };
+      return { center: [userLocation.lat, userLocation.lng], zoom: 11 };
     }
-    return { center: [51.9, 19.1], zoom: 8 };
+    return { center: [51.9, 19.1], zoom: 12 };
   }, [userLocation]);
 
   return (
@@ -132,7 +150,8 @@ export default function MapView({ results, userLocation, onMarkerClick, selected
         {/* lokalizacja użytkownika */}
         {userLocation && (
           <Marker position={[userLocation.lat, userLocation.lng]}>
-            <Popup>Twoja lokalizacja</Popup>
+            <Popup><span className="font-bold">Twoja lokalizacja</span></Popup>
+
           </Marker>
         )}
 
