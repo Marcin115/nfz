@@ -1,21 +1,71 @@
 'use client';
-import { useEffect } from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-
-// naprawa domyślnych ikon Leaflet
+/* ----------  DOMYŚLNE IKONY  ---------- */
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png',
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png'
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
 });
 
+/* ----------  POMOCNICZE  ---------- */
+/* zwraca liczbę dni (może być ≤ 0) */
+function getDaysUntil(dateStr) {
+  const today = new Date();
+  const target = new Date(dateStr);
+  if (isNaN(target)) return null;
+
+  return Math.ceil((target - today) / (1000 * 60 * 60 * 24));  // liczba
+}
+
+/* kolor markera na podstawie liczby dni */
+function colorByDays(diffDays) {
+  if (diffDays == null || diffDays <= 0) return '#4dff2e'; // zielony – „Dostępny”
+  if (diffDays <= 30) return '#4dff2e';                   // zielony
+  if (diffDays <= 90) return '#ffa726';                   // pomarańczowy
+  return '#ef5350';                                       // czerwony
+}
+
+/* ⬇ gdy wyświetlasz tekst w Tooltipie użyj: */
+function formatDaysText(diffDays) {
+  if (diffDays == null) return 'Brak daty';
+  return diffDays <= 0 ? 'Dostępny' : `${diffDays} dni`;
+}
+
+
+function getMarkerIcon(diffDays) {
+  const innerColor = colorByDays(diffDays ?? 9999);
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+      <path fill="${innerColor}" stroke="black" stroke-width="1"
+            stroke-linecap="round" stroke-linejoin="round"
+            d="M12 20.5c0 0 -6 -7 -6 -11.5c0-3.31 2.69-6 6-6s6 2.69 6 6
+               c0 4.5-6 11.5-6 11.5Z"/>
+      <circle cx="12" cy="9" r="3.5" fill="#fff" stroke="black" stroke-width="0.8"/>
+    </svg>`;
+  return L.divIcon({
+    className: '',
+    html: svg,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+    tooltipAnchor: [0, -32],
+  });
+}
+
+/* ----------  KONTROLER MAPY  ---------- */
 function MapController({ selectedResult }) {
   const map = useMap();
+
+  useEffect(() => {
+    // pojedynczy zoom control w prawym dolnym
+    if (!map.zoomControl) return;
+    map.zoomControl.setPosition('bottomright');
+  }, [map]);
 
   useEffect(() => {
     if (selectedResult?.latitude && selectedResult?.longitude) {
@@ -26,72 +76,96 @@ function MapController({ selectedResult }) {
   return null;
 }
 
-function getDaysUntil(dateStr) {
-  const today = new Date();
-  const target = new Date(dateStr);
-  const diffTime = target - today;
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return isNaN(diffDays) ? null : diffDays;
-}
+/* ----------  LEGENDA  ---------- */
+/* ----------  LEGENDA  ---------- */
+const Legend = () => (
+  <div className="absolute top-20 right-2 z-[1000] rounded-lg bg-white/90 shadow p-3 text-xs space-y-2">
+    {[
+      { color: '#4dff2e', label: 'do 30 dni' },
+      { color: '#ffa726', label: '31–90 dni' },
+      { color: '#ef5350', label: 'więcej niż 90 dni' },
+    ].map(({ color, label }) => (
+      <div key={label} className="flex items-center gap-2">
+        <span dangerouslySetInnerHTML={{
+          __html: `
+            <svg width="18" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 20.5c0 0 -6 -7 -6 -11.5c0-3.31 2.69-6 6-6s6 2.69 6 6
+                       c0 4.5-6 11.5-6 11.5Z"
+                    fill="${color}" stroke="black" stroke-width="1" />
+              <circle cx="12" cy="9" r="3.5" fill="#fff" stroke="black" stroke-width="0.8" />
+            </svg>
+          `
+        }} />
+        <span>{label}</span>
+      </div>
+    ))}
+  </div>
+);
 
 
+/* ----------  GŁÓWNY KOMPONENT  ---------- */
 export default function MapView({ results, userLocation, onMarkerClick, selectedResult }) {
-  // obliczamy center i zoom w zależności od dostępności lokalizacji
-  const { center, zoom } = useMemo(() => {
-    if (
-      userLocation &&
-      typeof userLocation.lat === 'number' &&
-      typeof userLocation.lng === 'number'
-    ) {
-      console.log("user location: " + userLocation);
-      return { center: [userLocation.lat, userLocation.lng], zoom: 16 };
+  if (typeof window === 'undefined') return null;
 
+  const { center, zoom } = useMemo(() => {
+    if (userLocation?.lat && userLocation?.lng) {
+      return { center: [userLocation.lat, userLocation.lng], zoom: 10 };
     }
-    console.log("user location not loaded");
     return { center: [51.9, 19.1], zoom: 8 };
   }, [userLocation]);
 
   return (
-    <MapContainer
-      center={center}
-      zoom={zoom}
-      scrollWheelZoom={true}
-      style={{ height: '100%', width: '100%' }}
-    >
-      <MapController selectedResult={selectedResult} />
-      <TileLayer
-        attribution="&copy; OpenStreetMap contributors"
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+    <div className="relative h-full w-full">
+      <MapContainer
+        center={center}
+        zoom={zoom}
+        scrollWheelZoom
+        zoomControl   // domyślny kontroler
+        style={{ height: '100%', width: '100%' }}
+      >
+        <MapController selectedResult={selectedResult} />
+        <TileLayer
+          attribution="© OpenStreetMap contributors"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
 
-      {/* Twój znacznik lokalizacji */}
-      {userLocation && (
-        <Marker position={[userLocation.lat, userLocation.lng]}>
-          <Popup>Twoja lokalizacja</Popup>
-        </Marker>
-      )}
-
-      {/* Markery wyników z API */}
-      {results
-        .filter(item => item.latitude && item.longitude)
-        .map((item, idx) => (
-          <Marker 
-            key={idx} 
-            position={[item.latitude, item.longitude]}
-            eventHandlers={{
-              click: () => onMarkerClick(item) // notify parent
-            }}>
-            {typeof window !== 'undefined' && (
-        <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent>
-          {
-            getDaysUntil(item.date) !== null
-              ? `Za ${getDaysUntil(item.date)} dni`
-              : 'Brak daty'
-          }
-        </Tooltip>)}
+        {/* lokalizacja użytkownika */}
+        {userLocation && (
+          <Marker position={[userLocation.lat, userLocation.lng]}>
+            <Popup>Twoja lokalizacja</Popup>
           </Marker>
+        )}
 
-        ))}
-    </MapContainer>
+        {/* wyniki API */}
+        {results
+          .filter(r => r.latitude && r.longitude)
+          .map((item, idx) => {
+            const days = getDaysUntil(item.date);
+            return (
+              <Marker
+                key={idx}
+                position={[item.latitude, item.longitude]}
+                icon={getMarkerIcon(days)}
+                eventHandlers={{ click: () => onMarkerClick(item) }}
+              >
+                <Tooltip
+                  direction="top"
+                  offset={[0, 0]}
+                  opacity={1}
+                  permanent
+                  className="custom-tooltip"
+                >
+                  {formatDaysText(days)}
+
+                </Tooltip>
+
+              </Marker>
+            );
+          })}
+      </MapContainer>
+
+      {/* legenda w prawym-górnym rogu */}
+      <Legend />
+    </div>
   );
 }

@@ -1,13 +1,23 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import "leaflet/dist/leaflet.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --font-sans: Arial, Helvetica, sans-serif;
+  overflow: hidden;
 }
 
+html,
 body {
+
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 
   background: var(--background);
   color: var(--foreground);
@@ -21,4 +31,23 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-y: auto;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.leaflet-tooltip.custom-tooltip {
+  font-size: 14px;
+  /* większa czcionka */
+  font-weight: 600;
+  /* pogrubienie */
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
 }

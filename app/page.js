@@ -85,62 +85,60 @@ export default function Home() {
           {/* Left: State selection */}
           <div>
             <h2 className="text-lg font-semibold text-[#326a5d] mb-4">1. Wybierz województwo</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {STATES.map((state) => (
-                  <button
-                    key={state.id}
-                    onClick={() => handleSelect(state)}
-                    className={`p-3 rounded-full text-sm font-medium transition ${
-                      selectedId === state.id
-                        ? 'bg-blue-100 text-blue-800 border border-blue-500'
-                        : 'bg-[#326a5d] text-white hover:bg-[#27564b]'
-                      }`}
-                    >
-                    {state.name}
-                  </button>
-                ))}
-              </div>
-          {selectedId && (
-          <p className="mt-4 text-sm text-gray-700">
-            Wybrano: <strong>{localStorage.getItem('selectedStateName')}</strong>
-          </p>
-        )}
-      </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {STATES.map((state) => (
+                <button
+                  key={state.id}
+                  onClick={() => handleSelect(state)}
+                  className={`p-3 rounded-full text-sm font-medium transition ${selectedId === state.id
+                    ? 'bg-blue-100 text-blue-800 border border-blue-500'
+                    : 'bg-[#326a5d] text-white hover:bg-[#27564b]'
+                    }`}
+                >
+                  {state.name}
+                </button>
+              ))}
+            </div>
+            {selectedId && (
+              <p className="mt-4 text-sm text-gray-700">
+                Wybrano: <strong>{localStorage.getItem('selectedStateName')}</strong>
+              </p>
+            )}
+          </div>
 
-      {/* Right: Location sharing */}
-      <div className="flex flex-col items-center justify-center text-center border border-gray-200 rounded-lg p-6 bg-gray-50">
-        <h2 className="text-lg font-semibold text-[#326a5d] mb-2">2. Udostępnij lokalizację</h2>
-        <p className="text-sm text-gray-600 mb-4">
-          Pomoże nam to określić, które placówki są najbliżej Ciebie.
-        </p>
-        <button
-          onClick={handleShareLocation}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-        >
-          Udostępnij lokalizację
-        </button>
-        {locationSaved && (
-          <p className="mt-3 text-green-600 text-sm">Lokalizacja zapisana!</p>
-        )}
-      </div>
-    </div>
+          {/* Right: Location sharing */}
+          <div className="flex flex-col items-center justify-center text-center border border-gray-200 rounded-lg p-6 bg-gray-50">
+            <h2 className="text-lg font-semibold text-[#326a5d] mb-2">2. Udostępnij lokalizację</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Pomoże nam to określić, które placówki są najbliżej Ciebie.
+            </p>
+            <button
+              onClick={handleShareLocation}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              Udostępnij lokalizację
+            </button>
+            {locationSaved && (
+              <p className="mt-3 text-green-600 text-sm">Lokalizacja zapisana!</p>
+            )}
+          </div>
+        </div>
 
-    {/* Continue Button */}
-    <div className="flex justify-center">
-      <button
-        onClick={handleContinue}
-        disabled={!selectedId || !locationSaved}
-        className={`px-8 py-3 rounded-lg text-white font-semibold transition ${
-          selectedId && locationSaved
-            ? 'bg-blue-600 hover:bg-blue-700'
-            : 'bg-gray-400 cursor-not-allowed'
-        }`}
-      >
-        Kontynuuj
-      </button>
-    </div>
-  </div>
-</main>
+        {/* Continue Button */}
+        <div className="flex justify-center">
+          <button
+            onClick={handleContinue}
+            disabled={!selectedId || !locationSaved}
+            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${selectedId && locationSaved
+              ? 'bg-blue-600 hover:bg-blue-700'
+              : 'bg-gray-400 cursor-not-allowed'
+              }`}
+          >
+            Kontynuuj
+          </button>
+        </div>
+      </div>
+    </main>
 
   );
 }

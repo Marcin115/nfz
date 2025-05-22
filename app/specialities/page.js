@@ -62,11 +62,10 @@ export default function SpecialitiesPage() {
               <button
                 key={speciality.key}
                 onClick={() => handleSelect(speciality)}
-                className={`w-full text-center px-4 py-2 rounded-full font-medium transition ${
-                  selectedKey === speciality.key
-                    ? 'bg-blue-100 text-blue-800 border border-blue-500'
-                    : 'bg-[#326a5d] text-white hover:bg-[#27564b]'
-                }`}
+                className={`w-full text-center px-4 py-2 rounded-full font-medium transition ${selectedKey === speciality.key
+                  ? 'bg-blue-100 text-blue-800 border border-blue-500'
+                  : 'bg-[#326a5d] text-white hover:bg-[#27564b]'
+                  }`}
               >
                 {speciality.name}
               </button>
@@ -79,11 +78,10 @@ export default function SpecialitiesPage() {
           <button
             onClick={handleContinue}
             disabled={!selectedKey}
-            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${
-              selectedKey
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
+            className={`px-8 py-3 rounded-lg text-white font-semibold transition ${selectedKey
+              ? 'bg-blue-600 hover:bg-blue-700'
+              : 'bg-gray-400 cursor-not-allowed'
+              }`}
           >
             Kontynuuj
           </button>
